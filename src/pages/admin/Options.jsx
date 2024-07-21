@@ -8,7 +8,7 @@ const Options = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [options, setOptions] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(5); // Nombre d'éléments par page
+    const [itemsPerPage] = useState(5);
     const navigate = useNavigate();
 
     const toggleModal = () => {

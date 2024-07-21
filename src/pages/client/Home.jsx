@@ -1,20 +1,25 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from '../../components/Card';
+import { propertieService } from '../../services/property';
 
 const Home = () => {
     const [currentPage, setCurrentPage] = useState(1);
+    const [properties, setProperties] = useState([]);
     const itemsPerPage = 4;
 
-    let properties = [
-        { title: "MAISON 1", surface: 64, price: 38574, city: "Cotonou", postal_code: 229 },
-        { title: "MAISON 2", surface: 67, price: 78014, city: "Parakou", postal_code: 229 },
-        { title: "MAISON 3", surface: 24, price: 58570, city: "Kandi", postal_code: 229 },
-        { title: "MAISON 4", surface: 20, price: 60789, city: "Porto Novo", postal_code: 299 },
-        { title: "MAISON 4", surface: 20, price: 60789, city: "Porto Novo", postal_code: 299 },
-        { title: "MAISON 4", surface: 20, price: 60789, city: "Porto Novo", postal_code: 299 },
-        { title: "MAISON 4", surface: 20, price: 60789, city: "Porto Novo", postal_code: 299 },
-        { title: "MAISON 4", surface: 20, price: 60789, city: "Porto Novo", postal_code: 299 },
-    ];
+    const renderProperties = async () => {
+        const res = await propertieService.getAllProperties();
+        try {
+            setProperties(res.data.data);
+        } catch (error) {
+            console.error('Error fetching properties:', error)
+        }
+        
+    }
+
+    useEffect(() => {
+        renderProperties();
+    }, []);
 
     // Calculate total pages
     const totalPages = Math.ceil(properties.length / itemsPerPage);
@@ -62,7 +67,8 @@ const Home = () => {
                         <button
                             onClick={() => handlePageChange(currentPage - 1)}
                             disabled={currentPage === 1}
-                            className="mr-1 px-2 py-1 bg-blue-500 text-white rounded-md text-xs"
+                            // className="mr-1 px-2 py-1 bg-blue-500 text-white rounded-md text-xs"
+                            className="px-2 py-1 text-sm border rounded-md bg-gray-200 hover:bg-gray-300"
                         >
                             Prev
                         </button>
@@ -70,7 +76,7 @@ const Home = () => {
                             <button
                                 key={page}
                                 onClick={() => handlePageChange(page)}
-                                className={`mx-1 px-2 py-1 ${page === currentPage ? 'bg-main text-white' : 'bg-gray-200 text-gray-600'} rounded-md text-xs`}
+                                className={`mx-1 px-2 py-1 ${page === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-600'} rounded-md text-xs`}
                             >
                                 {page}
                             </button>

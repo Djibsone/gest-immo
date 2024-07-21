@@ -193,7 +193,7 @@ const Properties = () => {
                         <button
                             key={page}
                             onClick={() => handlePageChange(page)}
-                            className={`mx-1 px-2 py-1 ${page === currentPage ? 'bg-main text-white' : 'bg-gray-200 text-gray-600'} rounded-md text-xs`}
+                            className={`mx-1 px-2 py-1 ${page === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-600'} rounded-md text-xs`}
                         >
                             {page}
                         </button>

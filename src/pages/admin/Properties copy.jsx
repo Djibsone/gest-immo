@@ -15,6 +15,14 @@ const Properties = () => {
         setIsOpen(!isOpen);
     }
 
+    // const properties = [
+    //     {id: 1, title:"Soluta totam ut et sed ea maxime deserunt maiores.", surface:62, price:12000, city:"Bouvet"},
+    //     {id: 2, title:"Nobis quasi sit ut ut.", surface:40, price:10000, city:"Moreau"},
+    //     {id: 3, title:"Sint ut et quam voluptatum mollitia ipsum ut.", surface:38, price:8000, city:"Noel"},
+    //     {id: 4, title:"Aliquid odit dolorem quae maxime quaerat eveniet sint.", surface:98, price:15000, city:"Lagarde"},
+    //     {id: 5, title:"Est hic ipsa et.", surface:110, price:20000, city:"Nguyennec"},
+    // ];
+
     const renderProperties = async () => {
         const res = await propertieService.getAllProperties();
         try {
@@ -34,10 +42,30 @@ const Properties = () => {
     };
 
     // Pagination
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = properties.slice(indexOfFirstItem, indexOfLastItem);
+    // const indexOfLastItem = currentPage * itemsPerPage;
+    // const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    // const currentItems = properties.slice(indexOfFirstItem, indexOfLastItem);
+    // const totalPages = Math.ceil(properties.length / itemsPerPage);
+
+    // const handlePageChange = (page) => {
+    //     if (page >= 1 && page <= totalPages) {
+    //         setCurrentPage(page);
+    //     }
+    // };
+
+    // Calculate total pages
     const totalPages = Math.ceil(properties.length / itemsPerPage);
+
+    // Calculate properties to display on the current page
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const propertiesToDisplay = properties.slice(startIndex, endIndex);
+
+    // Generate page numbers for pagination
+    const pageNumbers = [];
+    for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+    }
 
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {
@@ -53,7 +81,7 @@ const Properties = () => {
                         Tous les biens
                     </p>
                     <div className="relative">
-                        <Link to={'/admin/propertie'} className='text-xl bg-blue-600 text-white px-3 py-1 rounded-md duration-500 hover:bg-blue-700'>
+                        <Link to={'/admin/option'} className='text-xl bg-blue-600 text-white px-3 py-1 rounded-md duration-500 hover:bg-blue-700'>
                             Ajouter un bien
                         </Link>
                     </div>
@@ -71,9 +99,9 @@ const Properties = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {currentItems.map((propertie, index) => (
+                            {propertiesToDisplay.map((propertie, index) => (
                                 <tr key={propertie.id} className="bg-white border-b text-gray-900">
-                                    <td className="px-6 py-4">{indexOfFirstItem + index + 1}</td>
+                                    <td className="px-6 py-4">{startIndex + index + 1}</td>
                                     <td className="px-6 py-4">{propertie.title}</td>
                                     <td className="px-6 py-4">{propertie.surface} m²</td>
                                     <td className="px-6 py-4">{propertie.price}</td>
@@ -91,7 +119,7 @@ const Properties = () => {
                         </tbody>
                     </table>
                 </div>
-                <div className="flex justify-center mt-4">
+                {/* <div className="flex justify-center mt-4">
                     <button
                         onClick={() => handlePageChange(currentPage - 1)}
                         disabled={currentPage === 1}
@@ -115,7 +143,35 @@ const Properties = () => {
                     >
                         Next
                     </button>
-                </div>
+                </div> */}
+                {/* Pagination */}
+                {totalPages > 1 && (
+                    <div className="mt-4 flex justify-center items-center">
+                        <button
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            className="mr-1 px-2 py-1 bg-blue-500 text-white rounded-md text-xs"
+                        >
+                            Prev
+                        </button>
+                        {pageNumbers.map((page) => (
+                            <button
+                                key={page}
+                                onClick={() => handlePageChange(page)}
+                                className={`mx-1 px-2 py-1 ${page === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-600'} rounded-md text-xs`}
+                            >
+                                {page}
+                            </button>
+                        ))}
+                        <button
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                            className="ml-1 px-2 py-1 bg-blue-500 text-white rounded-md text-xs"
+                        >
+                            Next
+                        </button>
+                    </div>
+                )}
             </div>
             <Modal isOpen={isOpen} toggleModal={toggleModal} />
         </div>

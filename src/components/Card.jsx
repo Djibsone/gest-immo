@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import image from '../assets/Imagination.webp';
 
 const Card = ({ property }) => {
@@ -61,16 +61,14 @@ const Card = ({ property }) => {
             </div> */}
             <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-6 mt-3 max-md:max-w-lg mx-auto">
                 <div className="bg-white cursor-pointer rounded overflow-hidden shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] relative top-0 hover:-top-2 transition-all duration-300" onClick={() => handleDetail(property.id)}>
-                    <Link to={`/property`}>
-                        <img src={image} alt="Blog Post 1" className="w-full h-60 object-cover rounded" />
-                    </Link>
+                   
+                    <img src={image} alt="Blog Post 1" className="w-full h-60 object-cover rounded" onClick={() => handleDetail(property.id)} />
+                 
                     <div className="p-6">
                         <span className="text-sm block text-gray-400 mb-2">{property.price} XOF</span>
                         <h3 className="text-xl font-bold text-[#333]">{property.surface} - {property.price}</h3>
                         <hr className="my-4" />
-                        <Link to={`/property`}>
-                            <p className="text-blue-400 text-sm">{property.title}</p>
-                        </Link>
+                        <p className="text-blue-400 text-sm" onClick={() => handleDetail(property.id)}>{property.title}</p>    
                     </div>
                 </div>
             </div>
