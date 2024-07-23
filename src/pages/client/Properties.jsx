@@ -101,25 +101,39 @@ const Properties = () => {
 export default Properties;
 */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from '../../components/Card';
 import { FaSearch } from 'react-icons/fa';
 import Image from '../../assets/img.jpeg';
+import { propertieService } from '../../services/property';
 
 const Properties = () => {
     const [search, setSearch] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
+    const [properties, setProperties] = useState([]);
 
-    let properties = [
-        { title: "HOME", surface: 64, price: 38574, image: Image, city: "Cotonou", postal_code: 229 },
-        { title: "ABOUT", surface: 67, price: 78014, image: Image, city: "Parakou", postal_code: 229 },
-        { title: "CONTACT", surface: 24, price: 58570, image: Image, city: "Kandi", postal_code: 229 },
-        { title: "BLOG", surface: 20, price: 60789, image: Image, city: "Porto Novo", postal_code: 229 },
-        { title: "BLOG", surface: 20, price: 60789, image: Image, city: "Porto Novo", postal_code: 229 },
-        { title: "BLOG", surface: 20, price: 60789, image: Image, city: "Porto Novo", postal_code: 229 },
-        { title: "BLOG", surface: 20, price: 60789, image: Image, city: "Porto Novo", postal_code: 229 },
-        { title: "BLOG", surface: 20, price: 60789, image: Image, city: "Porto Novo", postal_code: 229 },
-    ];
+    // let properties = [
+    //     { title: "HOME", surface: 64, price: 38574, image: Image, city: "Cotonou", postal_code: 229 },
+    //     { title: "ABOUT", surface: 67, price: 78014, image: Image, city: "Parakou", postal_code: 229 },
+    //     { title: "CONTACT", surface: 24, price: 58570, image: Image, city: "Kandi", postal_code: 229 },
+    //     { title: "BLOG", surface: 20, price: 60789, image: Image, city: "Porto Novo", postal_code: 229 },
+    //     { title: "BLOG", surface: 20, price: 60789, image: Image, city: "Porto Novo", postal_code: 229 },
+    //     { title: "BLOG", surface: 20, price: 60789, image: Image, city: "Porto Novo", postal_code: 229 },
+    //     { title: "BLOG", surface: 20, price: 60789, image: Image, city: "Porto Novo", postal_code: 229 },
+    //     { title: "BLOG", surface: 20, price: 60789, image: Image, city: "Porto Novo", postal_code: 229 },
+    // ];
+    const renderProperties = async () => {
+        const res = await propertieService.getAllProperties();
+        try {
+            setProperties(res.data.data);
+        } catch (error) {
+            console.error('Error fetching properties:', error);
+        }
+    };
+
+    useEffect(() => {
+        renderProperties();
+    }, []);
 
     const handleSearchChange = (e) => {
         setSearch(e.target.value);
@@ -181,7 +195,7 @@ const Properties = () => {
             )}
             {/* Pagination */}
             {totalPages > 1 && (
-                <div className="mt-4 flex justify-center items-center">
+                <div className="mt-4 flex justify-center items-center flex-wrap">
                     <button
                         onClick={() => handlePageChange(currentPage - 1)}
                         disabled={currentPage === 1}
