@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { BookOpenIcon, Bars3BottomRightIcon, XMarkIcon, HomeIcon } from '@heroicons/react/24/solid';
-import { Link } from 'react-router-dom';
+import { Bars3BottomRightIcon, XMarkIcon, HomeIcon } from '@heroicons/react/24/solid';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
+    const navigate = useNavigate();
     let Links = [
         { name: "HOME", link: "/" },
         { name: "BIENS", link: "/properties" },
-        { name: "ABOUT", link: "/" },
+        { name: "ABOUT", link: "/faq" },
         { name: "CONTACT", link: "/" },
     ];
     let [open, setOpen] = useState(false);
@@ -15,9 +16,9 @@ const Navbar = () => {
         <div className='shadow-md w-full fixed top-0 left-0 z-50'>
             <div className='md:flex items-center justify-between bg-white py-4 md:px-10 px-7'>
                 {/* Logo section */}
-                <div className='font-bold text-2xl cursor-pointer flex items-center gap-1'>
+                <div className='font-bold text-2xl cursor-pointer flex items-center gap-1' onClick={() => navigate('/')}>
                     <HomeIcon className='w-7 h-7 text-blue-600' />
-                    <span><Link to={'/'}>Agence</Link></span>
+                    <span>Agence</span>
                 </div>
                 {/* Menu icon */}
                 <div onClick={() => setOpen(!open)} className='absolute right-8 top-6 cursor-pointer md:hidden w-7 h-7'>

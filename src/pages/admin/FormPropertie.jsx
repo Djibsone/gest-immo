@@ -242,6 +242,7 @@ import Select from '../../components/forms/Select';
 import { useNavigate, useParams } from 'react-router-dom';
 import { propertieService } from '../../services/property';
 import { optionService } from '../../services/option';
+import { toast } from 'react-toastify';
 
 const FormPropertie = () => {
     const navigate = useNavigate();
@@ -252,6 +253,7 @@ const FormPropertie = () => {
         images: null, options: [], sold: false
     });
     const [options, setOptions] = useState([]);
+    const [errors, setErrors] = useState({});
 
     const renderProperty = async () => {
         if (id) {
@@ -327,12 +329,28 @@ const FormPropertie = () => {
         e.preventDefault();
         try {
             if (id) {
-                await axios.put(`http://127.0.0.1:8000/api/properties/${id}`, formData);
+                const res = await propertieService.updateProperty(id, formData);
+                if (res.status === 200) {
+                    toast.success('Bien modifié avec succès.');
+                } else {
+                    toast.error('Échec de la modification du bien.');
+                }
             } else {
-                await axios.post('http://127.0.0.1:8000/api/properties', formData);
+                const res = await propertieService.addProperty(formData);
+                if (res.status === 200) {
+                    toast.success('Bien créé avec succès.');
+                } else {
+                    toast.error('Échec de la création du bien.');
+                }
             }
             navigate('/admin/properties');
         } catch (error) {
+            if (error.response) {
+                const apiErrors = error.response.data.errors || {};
+                setErrors(apiErrors);
+            } else {
+                toast.error('Erreur lors de la soumission du formulaire. Veuillez réessayer.');
+            }
             console.error('Error submitting form:', error);
         }
     };
@@ -342,7 +360,7 @@ const FormPropertie = () => {
             <div className="mx-auto pt-8">
                 <h2 className="text-2xl font-semibold">{id ? 'Editer un bien' : 'Créer un bien'}</h2>
 
-                <form className="space-y-4 mt-4" onSubmit={handleSubmit}>
+                <form className="space-y-4 mt-4" onSubmit={handleSubmit} encType='multipart/form-data'>
                     <div className="flex flex-wrap -mx-2 space-y-4 md:space-y-0">
                         <div className="w-full md:w-1/2 px-2">
                             <Input
@@ -352,6 +370,7 @@ const FormPropertie = () => {
                                 handleChange={handleChange}
                                 label="Titre"
                             />
+                            {errors.title && <p className="text-red-700">{errors.title}</p>}
                         </div>
                         <div className="w-full md:w-1/4 px-2">
                             <Input
@@ -361,6 +380,7 @@ const FormPropertie = () => {
                                 handleChange={handleChange}
                                 label="Surface"
                             />
+                            {errors.surface && <p className="text-red-700">{errors.surface}</p>}
                         </div>
                         <div className="w-full md:w-1/4 px-2">
                             <Input
@@ -370,6 +390,7 @@ const FormPropertie = () => {
                                 handleChange={handleChange}
                                 label="Prix"
                             />
+                            {errors.price && <p className="text-red-700">{errors.price}</p>}
                         </div>
                     </div>
 
@@ -383,6 +404,7 @@ const FormPropertie = () => {
                                 handleChange={handleChange}
                                 label="Description"
                             />
+                            {errors.description && <p className="text-red-700">{errors.description}</p>}
                         </div>
                         <div className="w-full md:w-1/2 px-2">
                             <Input
@@ -393,6 +415,7 @@ const FormPropertie = () => {
                                 handleChange={handleImageChange}
                                 label="Images"
                             />
+                            {errors.images && <p className="text-red-700">{errors.images}</p>}
                         </div>
                     </div>
 
@@ -405,6 +428,7 @@ const FormPropertie = () => {
                                 handleChange={handleChange}
                                 label="Pièces"
                             />
+                            {errors.rooms && <p className="text-red-700">{errors.rooms}</p>}
                         </div>
                         <div className="w-full md:w-1/3 px-2">
                             <Input
@@ -414,6 +438,7 @@ const FormPropertie = () => {
                                 handleChange={handleChange}
                                 label="Chambres"
                             />
+                            {errors.bedrooms && <p className="text-red-700">{errors.bedrooms}</p>}
                         </div>
                         <div className="w-full md:w-1/3 px-2">
                             <Input
@@ -423,6 +448,7 @@ const FormPropertie = () => {
                                 handleChange={handleChange}
                                 label="Etage"
                             />
+                            {errors.floor && <p className="text-red-700">{errors.floor}</p>}
                         </div>
                     </div>
 
@@ -435,6 +461,7 @@ const FormPropertie = () => {
                                 handleChange={handleChange}
                                 label="Ville"
                             />
+                            {errors.city && <p className="text-red-700">{errors.city}</p>}
                         </div>
                         <div className="w-full md:w-1/3 px-2">
                             <Input
@@ -444,6 +471,7 @@ const FormPropertie = () => {
                                 handleChange={handleChange}
                                 label="Adresse"
                             />
+                            {errors.address && <p className="text-red-700">{errors.address}</p>}
                         </div>
                         <div className="w-full md:w-1/3 px-2">
                             <Input
@@ -453,6 +481,7 @@ const FormPropertie = () => {
                                 handleChange={handleChange}
                                 label="Code postal"
                             />
+                            {errors.postal_code && <p className="text-red-700">{errors.postal_code}</p>}
                         </div>
                     </div>
 
@@ -464,6 +493,7 @@ const FormPropertie = () => {
                         options={options}
                         handleChange={handleChange}
                     />
+                    {errors.options && <p className="text-red-700">{errors.options}</p>}
 
                     <Input
                         type="checkbox"
